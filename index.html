@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OT-Fernzugriffs-Kriterienkompass · Companion zum Buch</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{--red:#cc0000;--red-soft:#edd3d2;--ink:#1a1614;--paper:#faf8f5;--line:#d8d2ca;--muted:#6b635c;
+--ok:#3a7d44;--teil:#c9820a;--offen:#cc0000;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'JetBrains Mono',monospace;background:var(--paper);color:var(--ink);line-height:1.5;
+background-image:radial-gradient(var(--line) .5px,transparent .5px);background-size:22px 22px;}
+.wrap{max-width:1180px;margin:0 auto;padding:38px 20px 80px;}
+header{border-bottom:3px solid var(--ink);padding-bottom:18px;margin-bottom:18px;position:relative;}
+.kicker{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--red);font-weight:600;}
+h1{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(24px,4.2vw,40px);line-height:1.05;margin:8px 0 10px;}
+.sub{font-size:13px;color:var(--muted);max-width:880px;}
+.sig{color:var(--red);font-weight:600;}
+.ref{font-size:11px;color:var(--muted);font-style:italic;margin-top:6px;}
+h2{font-family:'Fraunces',serif;font-size:20px;margin:26px 0 6px;}
+.note{font-size:12px;color:var(--muted);margin-bottom:10px;max-width:880px;}
+.btn{font-family:inherit;font-size:12px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;
+padding:10px 15px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;transition:.15s;}
+.btn.ghost{background:transparent;color:var(--ink);} .btn:hover{background:var(--red);border-color:var(--red);color:#fff;}
+.btn.sm{padding:5px 9px;font-size:10.5px;}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin:24px 0 0;align-items:center;}
+.warn{background:#fff7e6;border:1px solid #c9820a;color:#8a5a00;font-size:11.5px;padding:9px 12px;margin:10px 0;}
+footer{margin-top:34px;border-top:1px solid var(--line);padding-top:15px;font-size:11px;color:var(--muted);line-height:1.7;}
+.langsw{position:absolute;top:0;right:0;display:flex;gap:0;border:1px solid var(--ink);}
+.langsw button{font-family:inherit;font-size:11px;font-weight:600;padding:5px 11px;border:0;background:transparent;color:var(--ink);cursor:pointer;letter-spacing:1px;}
+.langsw button.on{background:var(--ink);color:#fff;}
+
+/* Kontext */
+.werkbar{display:flex;gap:14px;flex-wrap:wrap;align-items:center;background:#fff;border:1px solid var(--ink);padding:10px 14px;margin:12px 0;}
+.werkbar label{font-size:10px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);font-weight:600;}
+.werkbar input{border:1px solid var(--line);background:var(--paper);font-family:inherit;font-size:12px;padding:4px 6px;}
+.werkbar input.w{min-width:240px;}
+.q{background:#fff;border:1px solid var(--line);padding:10px 14px;margin:9px 0;}
+.q .qt{font-size:12px;font-weight:600;margin-bottom:7px;}
+.q .qt b{color:var(--red);}
+.opts{display:flex;flex-wrap:wrap;gap:6px;}
+.opt{font-size:11.5px;padding:5px 10px;border:1px solid var(--line);background:var(--paper);cursor:pointer;transition:.12s;}
+.opt:hover{border-color:var(--ink);}
+.opt.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+/* Profil-Tabelle */
+.colsw{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;margin:10px 0;align-items:center;}
+.colsw label{display:flex;gap:5px;align-items:center;cursor:pointer;}
+table{width:100%;border-collapse:collapse;background:#fff;font-size:11.5px;}
+th{font-size:10px;letter-spacing:1px;text-transform:uppercase;text-align:left;border-bottom:2px solid var(--ink);padding:7px 8px;background:#fff;}
+td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+.tblwrap{overflow-x:auto;border:1px solid var(--ink);background:#fff;}
+.lvl{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;padding:2px 8px;color:#fff;}
+.lvl.muss{background:var(--offen);} .lvl.soll{background:var(--teil);} .lvl.opt{background:var(--muted);}
+.crit-n{font-weight:600;} .crit-d{font-size:10.5px;color:var(--muted);margin-top:2px;}
+.why{font-size:10.5px;color:var(--muted);}
+.std{font-size:10.5px;white-space:nowrap;}
+.opcrit{font-style:italic;color:var(--muted);}
+
+/* Kandidaten */
+.candbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0;}
+.candbar input{border:1px solid var(--line);background:#fff;font-family:inherit;font-size:12px;padding:6px 8px;min-width:220px;}
+.tri{font-family:inherit;font-size:11px;font-weight:600;width:34px;padding:3px 0;border:1px solid var(--line);background:var(--paper);cursor:pointer;}
+.tri.y{background:var(--ok);color:#fff;border-color:var(--ok);}
+.tri.p{background:var(--teil);color:#fff;border-color:var(--teil);}
+.tri.n{background:var(--offen);color:#fff;border-color:var(--offen);}
+.candhead{display:flex;flex-direction:column;gap:3px;}
+.candhead .del{font-size:9px;color:var(--muted);cursor:pointer;text-decoration:underline;background:none;border:0;font-family:inherit;}
+.score{font-size:11px;}
+.score b{font-size:14px;}
+.ko{color:var(--offen);font-weight:600;font-size:10.5px;}
+.fit{color:var(--ok);font-weight:600;font-size:10.5px;}
+.gaps{font-size:10px;color:var(--muted);}
+
+.archwrap{background:#fff;border:1px solid var(--ink);padding:14px;margin:12px 0;overflow-x:auto;}
+.archwrap svg{display:block;margin:0 auto;max-width:100%;height:auto;}
+@media print{
+ body{background:none;} .noprint{display:none !important;}
+ .tblwrap{border:1px solid #000;overflow:visible;}
+ .opt{border:1px solid #999;} .opt.on{background:#000;color:#fff;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="langsw noprint"><button id="lde" class="on" onclick="setLang('de')">DE</button><button id="len" onclick="setLang('en')">EN</button></div>
+  <div class="kicker" data-i18n="kicker"></div>
+  <h1 data-i18n="title"></h1>
+  <div class="sub" data-i18n-html="sub"></div>
+  <div class="ref" data-i18n="ref"></div>
+</header>
+
+<div class="warn" data-i18n-html="scopeWarn"></div>
+
+<h2 data-i18n="h.ctx"></h2>
+<div class="note" data-i18n="n.ctx"></div>
+<div class="werkbar">
+  <label data-i18n="lbl.org"></label><input class="w" id="org" oninput="state.org=this.value">
+  <label data-i18n="lbl.date"></label><input type="date" id="datum" onchange="state.datum=this.value">
+</div>
+<div id="questions"></div>
+
+<h2 data-i18n="h.arch"></h2>
+<div class="note" data-i18n="n.arch"></div>
+<div class="archwrap" id="archSvg"></div>
+<div class="note" data-i18n-html="n.archLink"></div>
+
+<h2 data-i18n="h.profile"></h2>
+<div class="note" data-i18n="n.profile"></div>
+<div class="colsw noprint">
+  <span data-i18n="lbl.cols" style="font-weight:600"></span>
+  <label><input type="checkbox" checked onchange="cols.iec=this.checked;renderProfile()"> IEC 62443-3-3</label>
+  <label><input type="checkbox" checked onchange="cols.iso=this.checked;renderProfile()"> ISO/IEC 27001:2022</label>
+  <label><input type="checkbox" checked onchange="cols.nist=this.checked;renderProfile()"> NIST CSF 2.0</label>
+  <label><input type="checkbox" checked onchange="cols.nis2=this.checked;renderProfile()"> NIS2</label>
+</div>
+<div class="tblwrap"><table id="profileTbl"></table></div>
+<div class="note" style="margin-top:8px" data-i18n="n.mapping"></div>
+
+<h2 data-i18n="h.cand"></h2>
+<div class="note" data-i18n="n.cand"></div>
+<div class="candbar noprint">
+  <input id="candName" data-i18n-ph="ph.cand">
+  <button class="btn sm ghost" onclick="addCand()" data-i18n="btn.addCand"></button>
+</div>
+<div class="tblwrap" id="candWrap" style="display:none"><table id="candTbl"></table></div>
+<div class="note" id="candEmpty" data-i18n="n.candEmpty"></div>
+
+<div class="toolbar noprint">
+  <button class="btn" onclick="window.print()" data-i18n="btn.print"></button>
+  <button class="btn ghost" onclick="exportCSV()" data-i18n="btn.csv"></button>
+  <button class="btn ghost" onclick="saveJSON()" data-i18n="btn.save"></button>
+  <button class="btn ghost" onclick="document.getElementById('file').click()" data-i18n="btn.load"></button>
+  <input type="file" id="file" accept=".json" style="display:none" onchange="loadJSON(event)">
+</div>
+
+<footer id="foot"></footer>
+</div>
+
+<script>
+/* ================= i18n ================= */
+const I18N={
+de:{
+ kicker:"Companion · Kapitel 22 · Fernwartung & Fernzugriff",
+ title:"OT-Fernzugriffs-Kriterienkompass",
+ sub:"Anbieterneutrales Anforderungsprofil für sichere Fernzugriffslösungen in OT-Umgebungen. Aus wenigen Kontextangaben entsteht ein gewichteter Kriterienkatalog (<span class='sig'>Muss / Soll / Optional</span>) mit Verweisen auf IEC 62443-3-3, ISO/IEC 27001:2022, NIST CSF 2.0 und NIS2 — als Grundlage für Ausschreibung, Anbietergespräch und Audit-Argumentation.",
+ ref:"Begleitwerkzeug zum Fachbuch \u201EISMS für die Industrie. Von ISO 27001 über NIS2 bis OT-Security\u201C",
+ scopeWarn:"<b>Bewusst ohne Produktnamen.</b> Dieses Werkzeug bewertet keine Anbieter. Es erzeugt das Anforderungsprofil, gegen das Sie Kandidaten selbst prüfen — im Kandidatenvergleich unten, mit Ihren eigenen Einträgen.",
+ "h.ctx":"1 · Kontextprofil",
+ "n.ctx":"Sieben Fragen zur Einsatzumgebung. Jede Antwort verschiebt die Gewichtung einzelner Kriterien; die Begründung erscheint im Profil.",
+ "lbl.org":"Organisation / Werk","lbl.date":"Datum",
+ "h.arch":"2 · Referenzarchitektur",
+ "n.arch":"Die Kette, die die Kriterien gemeinsam beschreiben: Der Externe erreicht das Zielsystem nie direkt — Identität und Freigabe am Broker, Protokollbruch in der OT-DMZ, dahinter ausschließlich der beantragte Scope.",
+ "n.archLink":"Den eigenen Reifegrad entlang des Vier-Stufen-Modells (Kap. 22.2) bestimmt der <a href='https://sabinefroemling-tech.github.io/jit-fernwartung-fahrplan/'>JIT-Fernwartungs-Fahrplan</a> — dieses Werkzeug beantwortet die Anschlussfrage, welche Eigenschaften die Lösung mitbringen muss.",
+ "h.profile":"3 · Anforderungsprofil",
+ "n.profile":"Der abgeleitete Kriterienkatalog. Muss-Kriterien sind nicht verhandelbar: Ein Kandidat, der ein Muss-Kriterium nicht erfüllt, scheidet unabhängig von allen anderen Stärken aus.",
+ "lbl.cols":"Normspalten:",
+ "n.mapping":"Die Zuordnungen zu IEC 62443-3-3 (System Requirements, SR), ISO/IEC 27001:2022 (Anhang A), NIST CSF 2.0 und NIS2 Art. 21 Abs. 2 sind redaktionelle Orientierung der Autorin — keine offiziellen Mapping-Tabellen der Normungsgremien. Normtexte werden referenziert, nicht wiedergegeben. Für US-Kontexte vertieft NIST SP 800-82r3 die OT-spezifische Umsetzung.",
+ "h.cand":"4 · Kandidatenvergleich",
+ "n.cand":"Eigene Kandidaten anlegen (Produkt, Eigenbau, Bestandslösung) und je Kriterium bewerten: erfüllt (\u2713), teilweise (~), nicht erfüllt (\u2013). Die Abdeckung wird nach Muss=3 / Soll=2 / Optional=1 gewichtet; eine Muss-Lücke führt zum K.-o. unabhängig vom Score.",
+ "n.candEmpty":"Noch keine Kandidaten angelegt.",
+ "ph.cand":"Kandidat benennen \u2026","btn.addCand":"Hinzufügen",
+ "btn.print":"Drucken / PDF","btn.csv":"Profil als CSV","btn.save":"Speichern (JSON)","btn.load":"Laden (JSON)",
+ col:{crit:"Kriterium",lvl:"Stufe",why:"Begründung aus Kontext",iec:"IEC 62443-3-3",iso:"ISO 27001:2022",nist:"NIST CSF 2.0",nis2:"NIS2 Art. 21(2)"},
+ lvl:{muss:"Muss",soll:"Soll",opt:"Optional"},
+ opcrit:"Betriebskriterium — ohne direkten normativen Anker",
+ cand:{mussOk:"Muss erfüllt",cover:"gewichtete Abdeckung",ko:"K.-o. — offene Muss-Kriterien:",fit:"Alle Muss-Kriterien erfüllt",del:"entfernen"},
+ baseWhy:"Grundgewichtung für OT-Fernzugriff",
+ foot:"<b>Grenzen.</b> Der Kompass strukturiert die Anforderungsdefinition und das Anbietergespräch; er ersetzt weder Risikoanalyse noch Teststellung (PoC) noch juristische Prüfung. Die Normverweise sind Orientierung, keine Rechtsberatung und keine Konformitätsaussage. Alle Daten verbleiben im Browser; es findet keine Datenübertragung statt, und es wird nichts still gespeichert.<br><br>\u00A9 Sabine Frömling \u00B7 <a href='https://creativecommons.org/licenses/by-nc-nd/4.0/deed.de'>CC BY-NC-ND 4.0</a> \u00B7 Companion-Reihe: <a href='https://sabinefroemling-tech.github.io/crown-jewels-companion/'>Crown-Jewels</a> \u00B7 <a href='https://sabinefroemling-tech.github.io/no-touch-register/'>No-Touch-Register</a> \u00B7 <a href='https://sabinefroemling-tech.github.io/jit-fernwartung-fahrplan/'>JIT-Fernwartungs-Fahrplan</a> \u00B7 <a href='https://sabinefroemling-tech.github.io/ot-reifegrad-profil/'>OT-Reifegrad-Profil</a>",
+ deNote:"Hinweis (DE): Bei Session-Recording mit Erfassung interner Mitarbeiter Mitbestimmung nach \u00A787 Abs. 1 Nr. 6 BetrVG prüfen — Reihenfolge und Muster im JIT-Fernwartungs-Fahrplan."
+},
+en:{
+ kicker:"Companion · Chapter 22 · Remote maintenance & access",
+ title:"OT Remote Access Criteria Compass",
+ sub:"A vendor-neutral requirements profile for secure remote access in OT environments. A few context inputs produce a weighted criteria catalogue (<span class='sig'>Must / Should / Optional</span>) with references to IEC 62443-3-3, ISO/IEC 27001:2022, NIST CSF 2.0 and NIS2 — a working basis for RFPs, vendor conversations and audit reasoning.",
+ ref:"Companion to the book \u201CISMS f\u00FCr die Industrie. Von ISO 27001 \u00FCber NIS2 bis OT-Security\u201D",
+ scopeWarn:"<b>Deliberately vendor-free.</b> This tool does not rate vendors. It produces the requirements profile against which you assess candidates yourself — in the comparison section below, with your own entries.",
+ "h.ctx":"1 · Context profile",
+ "n.ctx":"Seven questions about the deployment environment. Each answer shifts the weighting of individual criteria; the rationale appears in the profile.",
+ "lbl.org":"Organisation / site","lbl.date":"Date",
+ "h.arch":"2 · Reference architecture",
+ "n.arch":"The chain the criteria jointly describe: the external technician never reaches the target directly — identity and approval at the broker, protocol break in the OT DMZ, and behind it only the requested scope.",
+ "n.archLink":"Your own maturity along the four-stage model (ch. 22.2) is assessed by the <a href='https://sabinefroemling-tech.github.io/jit-fernwartung-fahrplan/'>JIT Remote Maintenance Roadmap</a> — this tool answers the follow-up question of what properties the solution must bring.",
+ "h.profile":"3 · Requirements profile",
+ "n.profile":"The derived criteria catalogue. Must criteria are non-negotiable: a candidate that fails a Must criterion is out, regardless of its other strengths.",
+ "lbl.cols":"Standard columns:",
+ "n.mapping":"The mappings to IEC 62443-3-3 (System Requirements, SR), ISO/IEC 27001:2022 (Annex A), NIST CSF 2.0 and NIS2 Art. 21(2) are the author's editorial orientation — not official cross-reference tables issued by the standards bodies. Standards are referenced, not reproduced. For US contexts, NIST SP 800-82r3 details the OT-specific implementation.",
+ "h.cand":"4 · Candidate comparison",
+ "n.cand":"Add your own candidates (product, in-house build, incumbent) and rate each criterion: met (\u2713), partial (~), not met (\u2013). Coverage is weighted Must=3 / Should=2 / Optional=1; any Must gap is a knockout regardless of score.",
+ "n.candEmpty":"No candidates added yet.",
+ "ph.cand":"Name a candidate \u2026","btn.addCand":"Add",
+ "btn.print":"Print / PDF","btn.csv":"Profile as CSV","btn.save":"Save (JSON)","btn.load":"Load (JSON)",
+ col:{crit:"Criterion",lvl:"Level",why:"Rationale from context",iec:"IEC 62443-3-3",iso:"ISO 27001:2022",nist:"NIST CSF 2.0",nis2:"NIS2 Art. 21(2)"},
+ lvl:{muss:"Must",soll:"Should",opt:"Optional"},
+ opcrit:"Operational criterion — no direct normative anchor",
+ cand:{mussOk:"Must met",cover:"weighted coverage",ko:"Knockout — open Must criteria:",fit:"All Must criteria met",del:"remove"},
+ baseWhy:"Baseline weighting for OT remote access",
+ foot:"<b>Limits.</b> The compass structures requirements definition and vendor conversations; it replaces neither a risk analysis nor a proof of concept nor legal review. Standard references are orientation — not legal advice and not a statement of conformity. All data stays in your browser; nothing is transmitted and nothing is silently stored.<br><br>\u00A9 Sabine Fr\u00F6mling \u00B7 <a href='https://creativecommons.org/licenses/by-nc-nd/4.0/'>CC BY-NC-ND 4.0</a> \u00B7 Companion series: <a href='https://sabinefroemling-tech.github.io/crown-jewels-companion/'>Crown Jewels</a> \u00B7 <a href='https://sabinefroemling-tech.github.io/no-touch-register/'>No-Touch Register</a> \u00B7 <a href='https://sabinefroemling-tech.github.io/jit-fernwartung-fahrplan/'>JIT Remote Maintenance Roadmap</a> \u00B7 <a href='https://sabinefroemling-tech.github.io/ot-reifegrad-profil/'>OT Maturity Profile</a>",
+ deNote:"Note (Germany): if session recording captures internal employees, check co-determination under \u00A787(1) no. 6 BetrVG — sequence and template in the JIT Remote Maintenance Roadmap."
+}};
+
+/* ================= Kriterien ================= */
+const CRIT=[
+ {id:"uniqueId",op:false,iec:"SR 1.1 \u00B7 SR 1.3",iso:"A.5.16",nist:"PR.AA-01",nis2:"lit. i",
+  de:{n:"Individuelle Identit\u00E4ten, keine Sammelkonten",d:"Jede zugreifende Person (auch extern) hat ein eigenes, personenbezogenes Konto; Aktionen sind einer Person zuordenbar."},
+  en:{n:"Individual identities, no shared accounts",d:"Every accessing person (including third parties) has a personal account; actions are attributable to one individual."}},
+ {id:"mfa",op:false,iec:"SR 1.1 RE 2",iso:"A.8.5",nist:"PR.AA-03",nis2:"lit. j",
+  de:{n:"Multi-Faktor-Authentisierung",d:"Fernzugriff aus nicht vertrauensw\u00FCrdigen Netzen erfordert mindestens zwei Faktoren; phishing-resistente Verfahren bevorzugt."},
+  en:{n:"Multi-factor authentication",d:"Remote access from untrusted networks requires at least two factors; phishing-resistant methods preferred."}},
+ {id:"approval",op:false,iec:"SR 1.13 RE 1",iso:"A.5.18",nist:"PR.AA-05",nis2:"lit. i",
+  de:{n:"Expliziter Genehmigungs-Workflow",d:"Jede Sitzung wird vorab beantragt und durch eine benannte interne Stelle freigegeben — kein stehender Zugang."},
+  en:{n:"Explicit access approval workflow",d:"Each session is requested in advance and approved by a named internal role — no standing access."}},
+ {id:"jit",op:false,iec:"SR 1.13 \u00B7 SR 2.6",iso:"A.5.18 \u00B7 A.8.2",nist:"PR.AA-05",nis2:"lit. i",
+  de:{n:"Just-in-Time-Aktivierung",d:"Zug\u00E4nge sind im Ruhezustand deaktiviert; Aktivierung zeitlich begrenzt, automatische Deaktivierung nach Auftragsende."},
+  en:{n:"Just-in-time activation",d:"Access is disabled at rest; activation is time-bounded with automatic deactivation when the job ends."}},
+ {id:"vault",op:false,iec:"SR 1.5 \u00B7 SR 1.7",iso:"A.5.17",nist:"PR.AA-01",nis2:"lit. i, j",
+  de:{n:"Credential Vaulting & Injection",d:"Ger\u00E4te- und Systempassw\u00F6rter werden zentral verwahrt und in die Sitzung injiziert — der Dienstleister kennt sie nie."},
+  en:{n:"Credential vaulting & injection",d:"Device and system passwords are centrally vaulted and injected into the session — the service provider never learns them."}},
+ {id:"broker",op:false,iec:"SR 5.1 \u00B7 SR 5.2",iso:"A.8.22",nist:"PR.IR-01",nis2:"lit. e",
+  de:{n:"Protokollbruch statt direktem Tunnel",d:"Kein durchgehender L3-Tunnel in die OT-Zone; Sitzungen terminieren an einem Broker/Jump-System in der DMZ (Zonen-/Conduit-Modell)."},
+  en:{n:"Protocol break instead of direct tunnel",d:"No end-to-end L3 tunnel into the OT zone; sessions terminate at a broker/jump system in the DMZ (zone/conduit model)."}},
+ {id:"recording",op:false,iec:"SR 2.8 \u00B7 SR 2.9 \u00B7 SR 6.1",iso:"A.8.15",nist:"PR.PS-04",nis2:"lit. b",
+  de:{n:"Session-Recording & Audit-Trail",d:"Sitzungen werden vollst\u00E4ndig aufgezeichnet und revisionssicher aufbewahrt; Auswertung nur durch berechtigte Rollen."},
+  en:{n:"Session recording & audit trail",d:"Sessions are fully recorded and retained tamper-evidently; review restricted to authorised roles."}},
+ {id:"liveTerm",op:false,iec:"SR 2.6",iso:"A.8.16",nist:"DE.CM-03",nis2:"lit. b",
+  de:{n:"Live-\u00DCberwachung & Sitzungsabbruch",d:"Laufende Sitzungen sind in Echtzeit einsehbar und k\u00F6nnen jederzeit durch interne Stellen beendet werden."},
+  en:{n:"Live monitoring & session termination",d:"Active sessions are observable in real time and can be terminated at any moment by internal staff."}},
+ {id:"fourEyes",op:false,iec:"SR 2.1",iso:"A.5.3",nist:"PR.AA-05",nis2:"lit. i",
+  de:{n:"Vier-Augen-Prinzip / begleitete Sitzung",d:"Kritische Eingriffe nur unter Beobachtung oder Mitwirkung einer zweiten, internen Person."},
+  en:{n:"Four-eyes principle / supervised session",d:"Critical interventions only under observation or participation of a second, internal person."}},
+ {id:"anomaly",op:false,iec:"SR 6.2",iso:"A.8.16",nist:"DE.CM-01",nis2:"lit. b",
+  de:{n:"Kontinuierliches Monitoring / Anomalieerkennung",d:"Fernzugriffsverkehr wird laufend \u00FCberwacht; Abweichungen vom erwarteten Verhalten werden erkannt und gemeldet."},
+  en:{n:"Continuous monitoring / anomaly detection",d:"Remote access traffic is continuously monitored; deviations from expected behaviour are detected and reported."}},
+ {id:"protoAware",op:false,iec:"SR 5.2",iso:"\u2014",nist:"SP 800-82r3",nis2:"lit. e",
+  de:{n:"OT-Protokoll-Awareness",d:"Die L\u00F6sung versteht und filtert Industrieprotokolle (z. B. Modbus, DNP3, PROFINET, OPC UA) statt sie blind zu transportieren."},
+  en:{n:"OT protocol awareness",d:"The solution understands and filters industrial protocols (e.g. Modbus, DNP3, PROFINET, OPC UA) rather than transporting them blindly."}},
+ {id:"breakGlass",op:false,iec:"62443-2-1 (Policy)",iso:"A.5.29 \u00B7 A.5.30",nist:"PR.AA-05",nis2:"lit. c",
+  de:{n:"Definierter Notfallzugriff (Break-Glass)",d:"Ein dokumentiertes, protokolliertes Notfallverfahren existiert, das den Regelprozess im St\u00F6rfall kontrolliert umgeht."},
+  en:{n:"Defined emergency access (break-glass)",d:"A documented, logged emergency procedure exists that bypasses the regular process in a controlled way during incidents."}},
+ {id:"agentless",op:true,iec:"\u2014",iso:"\u2014",nist:"\u2014",nis2:"\u2014",
+  de:{n:"Agentenlose Anbindung (Brownfield)",d:"Altanlagen ohne installierbare Agenten lassen sich ohne Eingriff in das Endger\u00E4t anbinden."},
+  en:{n:"Agentless connectivity (brownfield)",d:"Legacy assets that cannot host agents can be connected without modifying the endpoint."}},
+ {id:"sovereignty",op:true,iec:"\u2014",iso:"A.5.19\u2013A.5.23",nist:"GV.SC",nis2:"lit. d",
+  de:{n:"Betriebsmodell & Datenhoheit",d:"On-Premise-Option bzw. Hosting-Region und Auftragsverarbeitung entsprechen den eigenen Souver\u00E4nit\u00E4ts- und Vertragsvorgaben."},
+  en:{n:"Deployment model & data sovereignty",d:"On-premise option or hosting region and data processing terms match the organisation's sovereignty and contractual requirements."}}
+];
+
+/* ================= Fragen ================= */
+const QUESTIONS=[
+ {key:"reg",de:{q:"Regulatorischer Status der Anlage?",o:["NIS2 wesentlich / DE-KRITIS","NIS2 wichtig","USA: kritische Infrastruktur","Keine / unklar"]},
+            en:{q:"Regulatory status of the site?",o:["NIS2 essential / DE-KRITIS","NIS2 important","US critical infrastructure","None / unclear"]}},
+ {key:"third",de:{q:"Wer greift zu?",o:["Nur internes Personal","Nur Externe (OEM/Integrator)","Gemischt intern + extern"]},
+              en:{q:"Who accesses?",o:["Internal staff only","Third parties only (OEM/integrator)","Mixed internal + external"]}},
+ {key:"proto",de:{q:"Industrieprotokolle direkt im Zugriffspfad (Modbus, DNP3, PROFINET, OPC UA \u2026)?",o:["Ja","Nein, nur RDP/SSH auf Jump-Ebene","Unklar"]},
+              en:{q:"Industrial protocols directly in the access path (Modbus, DNP3, PROFINET, OPC UA \u2026)?",o:["Yes","No, only RDP/SSH at jump level","Unclear"]}},
+ {key:"brown",de:{q:"Brownfield-Anteil — Anlagen, auf denen keine Agenten installierbar sind?",o:["Hoch","Gering","Unklar"]},
+              en:{q:"Brownfield share — assets where agents cannot be installed?",o:["High","Low","Unclear"]}},
+ {key:"avail",de:{q:"Verf\u00FCgbarkeitsanforderung der Produktion?",o:["24/7 — Stillstand kritisch","Wartungsfenster m\u00F6glich"]},
+              en:{q:"Availability requirement of production?",o:["24/7 — downtime critical","Maintenance windows possible"]}},
+ {key:"cloud",de:{q:"Cloud-Betrieb der Zugriffsl\u00F6sung zul\u00E4ssig?",o:["Nur On-Premise","Hybrid","Cloud zul\u00E4ssig"]},
+              en:{q:"Is cloud operation of the access solution permissible?",o:["On-premise only","Hybrid","Cloud permissible"]}},
+ {key:"sl",de:{q:"Ziel-Security-Level der betroffenen Zone (IEC 62443)?",o:["SL 1","SL 2","SL 3\u20134","Nicht festgelegt"]},
+           en:{q:"Target security level of the affected zone (IEC 62443)?",o:["SL 1","SL 2","SL 3\u20134","Not defined"]}}
+];
+
+/* ================= Engine ================= */
+/* Stufen: 0=Optional 1=Soll 2=Muss */
+const BASE={uniqueId:2,mfa:2,approval:1,jit:1,vault:0,broker:1,recording:1,liveTerm:1,fourEyes:0,anomaly:0,protoAware:0,breakGlass:1,agentless:0,sovereignty:0};
+
+const RULES=[
+ {when:s=>s.reg===0,up:{jit:2,approval:2,recording:2,broker:2,breakGlass:2,liveTerm:2,vault:1,anomaly:1},
+  de:"NIS2-wesentlich/KRITIS",en:"NIS2 essential/KRITIS"},
+ {when:s=>s.reg===1,up:{jit:2,approval:2,broker:2,recording:1,anomaly:1},
+  de:"NIS2-wichtig",en:"NIS2 important"},
+ {when:s=>s.reg===2,up:{jit:2,approval:2,broker:2,recording:1,anomaly:1},
+  de:"US-KRITIS-Kontext (SP 800-82r3)",en:"US critical-infrastructure context (SP 800-82r3)"},
+ {when:s=>s.third===1||s.third===2,up:{vault:2,recording:1,fourEyes:1,jit:2},
+  de:"externe Dienstleister im Zugriff",en:"third-party access"},
+ {when:s=>s.proto===0,up:{protoAware:2,anomaly:1},
+  de:"Industrieprotokolle im Zugriffspfad",en:"industrial protocols in the access path"},
+ {when:s=>s.proto===2,up:{protoAware:1},
+  de:"Protokoll-Lage ungekl\u00E4rt",en:"protocol exposure unclear"},
+ {when:s=>s.brown===0,up:{agentless:2},
+  de:"hoher Brownfield-Anteil",en:"high brownfield share"},
+ {when:s=>s.brown===2,up:{agentless:1},
+  de:"Brownfield-Lage ungekl\u00E4rt",en:"brownfield exposure unclear"},
+ {when:s=>s.avail===0,up:{breakGlass:2,liveTerm:1},
+  de:"24/7-Verf\u00FCgbarkeit",en:"24/7 availability"},
+ {when:s=>s.cloud===0,up:{sovereignty:2},
+  de:"On-Premise-Vorgabe",en:"on-premise mandate"},
+ {when:s=>s.cloud===1,up:{sovereignty:1},
+  de:"Hybrid-Vorgabe",en:"hybrid mandate"},
+ {when:s=>s.sl===1,up:{approval:2},
+  de:"Ziel-SL 2",en:"target SL 2"},
+ {when:s=>s.sl===2,up:{approval:2,vault:2,liveTerm:2,fourEyes:1,anomaly:1},
+  de:"Ziel-SL 3\u20134",en:"target SL 3\u20134"}
+];
+
+let lang="de";
+let cols={iec:true,iso:true,nist:true,nis2:true};
+let state={org:"",datum:todayISO(),ans:{},cands:[]};
+QUESTIONS.forEach(q=>state.ans[q.key]=null);
+
+function todayISO(){const d=new Date();return d.toISOString().slice(0,10);}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function t(k){const L=I18N[lang];if(typeof L[k]==="string")return L[k];const p=k.split(".");let o=L;for(const x of p){o=o?.[x];if(o===undefined)return k;}return o;}
+
+function derive(){
+ const lvl={...BASE};const why={};
+ CRIT.forEach(c=>why[c.id]=[]);
+ RULES.forEach(r=>{
+   if(r.when(state.ans)!==true)return;
+   Object.entries(r.up).forEach(([id,v])=>{
+     if(v>lvl[id]){lvl[id]=v;why[id]=[r[lang]];}
+     else if(v===lvl[id]&&v>BASE[id]){why[id].push(r[lang]);}
+   });
+ });
+ return {lvl,why};
+}
+
+
+/* ================= Referenzarchitektur (SVG) ================= */
+const ARCH={
+de:{n1:"Externer Wartungstechniker",s1:"aus nicht vertrauensw\u00FCrdigem Netz",
+    n2:"Session-Broker (PAM / SRA)",s2:"Identit\u00E4t, Genehmigung, Aufzeichnung",
+    n3:"Jump-Host in der OT-DMZ",s3:"Protokollbruch; kein Durchgriff auf L3",
+    n4:"OT- / SCADA-Zielger\u00E4t",s4:"nur freigegebene Assets und Protokolle",
+    e1a:"MFA, Antrag und",e1b:"Just-in-Time-Freigabe",
+    e2a:"Protokoll-Whitelist,",e2b:"Session-Recording",
+    e3a:"Zugriff nur auf den",e3b:"beantragten Scope",
+    byp:"direkter Durchgriff \u2014 verboten",
+    f1:"Kein L3-VPN in das OT-Segment, kein direktes RDP/SSH aus dem Internet, kein",
+    f2:"herstellereigenes VPN, keine Consumer-Remote-Desktop-Tools, kein Standing Access.",
+    l1:"erlaubt: vermittelter \u00DCbergang (authentifiziert, protokolliert)",
+    l2:"verboten: direkter Durchgriff unter Umgehung von Broker und DMZ"},
+en:{n1:"External maintenance technician",s1:"from an untrusted network",
+    n2:"Session broker (PAM / SRA)",s2:"identity, approval, recording",
+    n3:"Jump host in the OT DMZ",s3:"protocol break; no L3 pass-through",
+    n4:"OT / SCADA target device",s4:"approved assets and protocols only",
+    e1a:"MFA, request and",e1b:"just-in-time approval",
+    e2a:"protocol whitelist,",e2b:"session recording",
+    e3a:"access limited to the",e3b:"requested scope",
+    byp:"direct pass-through \u2014 forbidden",
+    f1:"No L3 VPN into the OT segment, no direct RDP/SSH from the internet, no",
+    f2:"vendor-owned VPN, no consumer remote desktop tools, no standing access.",
+    l1:"allowed: brokered transition (authenticated, logged)",
+    l2:"forbidden: direct pass-through bypassing broker and DMZ"}};
+
+function renderArch(){
+ const a=ARCH[lang];
+ const box=(y,n,s)=>`<rect x="260" y="${y}" width="640" height="120" rx="3"/>
+  <text x="580" y="${y+50}" font-size="26" font-weight="600" class="tt">${n}</text>
+  <text x="580" y="${y+90}" font-size="21" class="ts">${s}</text>`;
+ const lbl=(y,l1,l2)=>`<text x="915" y="${y}" font-size="21" text-anchor="start" class="ts">${l1}</text>
+  <text x="915" y="${y+32}" font-size="21" text-anchor="start" class="ts">${l2}</text>`;
+ document.getElementById("archSvg").innerHTML=`
+ <svg viewBox="0 0 1240 1090" xmlns="http://www.w3.org/2000/svg" role="img" style="max-width:740px">
+ <defs><marker id="kah" refX="8" refY="3" markerWidth="10" markerHeight="10" markerUnits="strokeWidth" orient="auto"><path d="M0 0 8 3 0 6Z" fill="var(--ink)"/></marker></defs>
+ <g fill="none" stroke="var(--ink)" stroke-width="2.5">
+  ${'<'+'rect/>'===''?'':''}
+ </g>
+ <g fill="#fff" stroke="var(--ink)" stroke-width="2.5" text-anchor="middle" font-family="inherit">
+  ${box(20,a.n1,a.s1)}${box(270,a.n2,a.s2)}${box(520,a.n3,a.s3)}${box(770,a.n4,a.s4)}
+ </g>
+ <g stroke="var(--ink)" stroke-width="4">
+  <line x1="580" y1="140" x2="580" y2="262" marker-end="url(#kah)"/>
+  <line x1="580" y1="390" x2="580" y2="512" marker-end="url(#kah)"/>
+  <line x1="580" y1="640" x2="580" y2="762" marker-end="url(#kah)"/>
+ </g>
+ <g stroke="var(--red)" stroke-width="4" stroke-dasharray="4 12" fill="none">
+  <line x1="180" y1="80" x2="180" y2="830"/><line x1="180" y1="80" x2="252" y2="80"/><line x1="180" y1="830" x2="252" y2="830"/>
+ </g>
+ <g text-anchor="middle" font-family="inherit">
+  <text x="146" y="470" font-size="21" fill="var(--red)" transform="rotate(-90 146 470)">${a.byp}</text>
+ </g>
+ <g font-family="inherit" fill="var(--muted)">${lbl(195,a.e1a,a.e1b)}${lbl(445,a.e2a,a.e2b)}${lbl(695,a.e3a,a.e3b)}</g>
+ <g font-family="inherit" font-size="21" fill="var(--ink)" text-anchor="start">
+  <text x="60" y="950">${a.f1}</text><text x="60" y="986">${a.f2}</text>
+ </g>
+ <g stroke="var(--ink)" stroke-width="4"><line x1="60" y1="1032" x2="150" y2="1032" marker-end="url(#kah)"/></g>
+ <g stroke="var(--red)" stroke-width="4" stroke-dasharray="4 12"><line x1="60" y1="1072" x2="150" y2="1072"/></g>
+ <g font-family="inherit" font-size="21" text-anchor="start">
+  <text x="170" y="1041" fill="var(--ink)">${a.l1}</text><text x="170" y="1081" fill="var(--red)">${a.l2}</text>
+ </g>
+ </svg>`;
+ const svg=document.querySelector("#archSvg svg");
+ svg.querySelectorAll(".tt").forEach(t=>t.setAttribute("fill","var(--ink)"));
+ svg.querySelectorAll(".ts").forEach(t=>{if(!t.getAttribute("fill"))t.setAttribute("fill","var(--muted)");});
+}
+
+/* ================= Rendering ================= */
+function applyI18n(){
+ document.documentElement.lang=lang;
+ document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
+ document.querySelectorAll("[data-i18n-html]").forEach(el=>el.innerHTML=t(el.dataset.i18nHtml));
+ document.querySelectorAll("[data-i18n-ph]").forEach(el=>el.placeholder=t(el.dataset.i18nPh));
+ document.getElementById("foot").innerHTML=t("foot");
+ document.getElementById("lde").classList.toggle("on",lang==="de");
+ document.getElementById("len").classList.toggle("on",lang==="en");
+ document.title=lang==="de"?"OT-Fernzugriffs-Kriterienkompass · Companion zum Buch":"OT Remote Access Criteria Compass · Book companion";
+}
+function setLang(l){lang=l;applyI18n();renderArch();renderQuestions();renderProfile();renderCands();}
+
+function renderQuestions(){
+ let h="";
+ QUESTIONS.forEach((q,qi)=>{
+   h+=`<div class="q"><div class="qt"><b>${qi+1}</b> \u00B7 ${esc(q[lang].q)}</div><div class="opts">`;
+   q[lang].o.forEach((o,oi)=>{
+     h+=`<span class="opt ${state.ans[q.key]===oi?'on':''}" onclick="setAns('${q.key}',${oi})">${esc(o)}</span>`;
+   });
+   h+=`</div></div>`;
+ });
+ document.getElementById("questions").innerHTML=h;
+}
+function setAns(k,v){state.ans[k]=state.ans[k]===v?null:v;renderQuestions();renderProfile();renderCands();}
+
+function lvlBadge(v){
+ const m=[["opt",t("lvl.opt")],["soll",t("lvl.soll")],["muss",t("lvl.muss")]][v];
+ return `<span class="lvl ${m[0]}">${m[1]}</span>`;
+}
+
+function renderProfile(){
+ const {lvl,why}=derive();
+ let h=`<thead><tr><th>${t("col.crit")}</th><th>${t("col.lvl")}</th><th>${t("col.why")}</th>`;
+ if(cols.iec)h+=`<th>${t("col.iec")}</th>`;
+ if(cols.iso)h+=`<th>${t("col.iso")}</th>`;
+ if(cols.nist)h+=`<th>${t("col.nist")}</th>`;
+ if(cols.nis2)h+=`<th>${t("col.nis2")}</th>`;
+ h+=`</tr></thead><tbody>`;
+ const order=[...CRIT].sort((a,b)=>lvl[b.id]-lvl[a.id]);
+ order.forEach(c=>{
+   const w=why[c.id].length?why[c.id].join(" + "):t("baseWhy");
+   h+=`<tr><td><div class="crit-n">${esc(c[lang].n)}</div><div class="crit-d">${esc(c[lang].d)}</div></td>
+   <td>${lvlBadge(lvl[c.id])}</td><td class="why">${esc(w)}</td>`;
+   const opNote=c.op?` <span class="opcrit">(${t("opcrit")})</span>`:"";
+   if(cols.iec)h+=`<td class="std">${c.iec}${c.op&&c.iec==="\u2014"?opNote:""}</td>`;
+   if(cols.iso)h+=`<td class="std">${c.iso}</td>`;
+   if(cols.nist)h+=`<td class="std">${c.nist}</td>`;
+   if(cols.nis2)h+=`<td class="std">${c.nis2}</td>`;
+   h+=`</tr>`;
+ });
+ h+=`</tbody>`;
+ document.getElementById("profileTbl").innerHTML=h;
+ /* DE-Mitbestimmungshinweis bei Recording-Muss + interner Erfassung */
+ const warnId="bvwarn";document.getElementById(warnId)?.remove();
+ if(lvl.recording===2&&state.ans.third===2){
+   const d=document.createElement("div");d.className="warn";d.id=warnId;d.textContent=t("deNote");
+   document.getElementById("profileTbl").parentElement.after(d);
+ }
+}
+
+/* ================= Kandidaten ================= */
+function addCand(){
+ const inp=document.getElementById("candName");const n=inp.value.trim();
+ if(!n||state.cands.length>=6)return;
+ const ratings={};CRIT.forEach(c=>ratings[c.id]=null);
+ state.cands.push({name:n,r:ratings});inp.value="";renderCands();
+}
+function delCand(i){state.cands.splice(i,1);renderCands();}
+function cycle(ci,id){
+ const cur=state.cands[ci].r[id];
+ state.cands[ci].r[id]=cur===null?1:cur===1?0.5:cur===0.5?0:null;
+ renderCands();
+}
+function triLabel(v){return v===1?"\u2713":v===0.5?"~":v===0?"\u2013":"\u00B7";}
+function triClass(v){return v===1?"y":v===0.5?"p":v===0?"n":"";}
+
+function renderCands(){
+ const wrap=document.getElementById("candWrap"),empty=document.getElementById("candEmpty");
+ if(!state.cands.length){wrap.style.display="none";empty.style.display="block";return;}
+ wrap.style.display="block";empty.style.display="none";
+ const {lvl}=derive();
+ const W={2:3,1:2,0:1};
+ let h=`<thead><tr><th>${t("col.crit")}</th><th>${t("col.lvl")}</th>`;
+ state.cands.forEach((c,i)=>{
+   h+=`<th><div class="candhead">${esc(c.name)}<button class="del noprint" onclick="delCand(${i})">${t("cand.del")}</button></div></th>`;
+ });
+ h+=`</tr></thead><tbody>`;
+ const order=[...CRIT].sort((a,b)=>lvl[b.id]-lvl[a.id]);
+ order.forEach(cr=>{
+   h+=`<tr><td class="crit-n">${esc(cr[lang].n)}</td><td>${lvlBadge(lvl[cr.id])}</td>`;
+   state.cands.forEach((c,i)=>{
+     const v=c.r[cr.id];
+     h+=`<td><button class="tri ${triClass(v)}" onclick="cycle(${i},'${cr.id}')">${triLabel(v)}</button></td>`;
+   });
+   h+=`</tr>`;
+ });
+ /* Auswertung */
+ h+=`<tr><td colspan="2" style="font-weight:600">${t("cand.cover")}</td>`;
+ state.cands.forEach(c=>{
+   let got=0,max=0,mussTot=0,mussOk=0;const koList=[];
+   CRIT.forEach(cr=>{
+     const w=W[lvl[cr.id]];max+=w;
+     const v=c.r[cr.id];got+=w*(v===1?1:v===0.5?0.5:0);
+     if(lvl[cr.id]===2){mussTot++;
+       if(v===1)mussOk++;
+       else koList.push(cr[lang].n);}
+   });
+   const pct=max?Math.round(100*got/max):0;
+   let verdict=koList.length
+     ?`<div class="ko">${t("cand.ko")}</div><div class="gaps">${koList.map(esc).join("; ")}</div>`
+     :`<div class="fit">${t("cand.fit")}</div>`;
+   h+=`<td class="score"><b>${pct} %</b><br>${t("cand.mussOk")}: ${mussOk}/${mussTot}${verdict}</td>`;
+ });
+ h+=`</tr></tbody>`;
+ document.getElementById("candTbl").innerHTML=h;
+}
+
+/* ================= Export / Persistenz ================= */
+function exportCSV(){
+ const {lvl,why}=derive();
+ const L=I18N[lang];
+ const head=[L.col.crit,"",L.col.lvl,L.col.why,L.col.iec,L.col.iso,L.col.nist,L.col.nis2,...state.cands.map(c=>c.name)];
+ const lvlTxt=v=>[L.lvl.opt,L.lvl.soll,L.lvl.muss][v];
+ const rows=[head];
+ const order=[...CRIT].sort((a,b)=>lvl[b.id]-lvl[a.id]);
+ order.forEach(c=>{
+   rows.push([c[lang].n,c[lang].d,lvlTxt(lvl[c.id]),
+     why[c.id].length?why[c.id].join(" + "):L.baseWhy,
+     c.iec,c.iso,c.nist,c.nis2,
+     ...state.cands.map(cd=>{const v=cd.r[c.id];return v===1?"\u2713":v===0.5?"~":v===0?"\u2013":"";})]);
+ });
+ const csv=rows.map(r=>r.map(x=>`"${String(x).replace(/"/g,'""')}"`).join(";")).join("\n");
+ const blob=new Blob(["\ufeff"+csv],{type:"text/csv"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+ a.download=lang==="de"?"fernzugriffs-anforderungsprofil.csv":"remote-access-requirements-profile.csv";a.click();
+}
+function saveJSON(){
+ const blob=new Blob([JSON.stringify({lang,org:state.org,datum:state.datum,ans:state.ans,cands:state.cands},null,2)],{type:"application/json"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="ot-fernzugriffs-kriterienkompass.json";a.click();
+}
+function loadJSON(e){
+ const f=e.target.files[0];if(!f)return;const r=new FileReader();
+ r.onload=()=>{try{
+   const d=JSON.parse(r.result);
+   if(d&&d.ans){
+     state.org=d.org||"";state.datum=d.datum||todayISO();
+     QUESTIONS.forEach(q=>state.ans[q.key]=(q.key in d.ans)?d.ans[q.key]:null);
+     state.cands=Array.isArray(d.cands)?d.cands.slice(0,6).map(c=>{
+       const ratings={};CRIT.forEach(cr=>ratings[cr.id]=(c.r&&cr.id in c.r)?c.r[cr.id]:null);
+       return {name:String(c.name||"?"),r:ratings};
+     }):[];
+     if(d.lang==="en"||d.lang==="de")lang=d.lang;
+     syncFields();applyI18n();renderArch();renderQuestions();renderProfile();renderCands();
+   }
+ }catch(err){alert(lang==="de"?"Datei nicht lesbar.":"File not readable.");}};
+ r.readAsText(f);e.target.value="";
+}
+function syncFields(){
+ const o=document.getElementById("org");if(o)o.value=state.org||"";
+ const dt=document.getElementById("datum");if(dt)dt.value=state.datum||"";
+}
+
+/* ================= Init ================= */
+syncFields();applyI18n();renderArch();renderQuestions();renderProfile();renderCands();
+</script>
+</body>
+</html>
