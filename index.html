@@ -199,10 +199,10 @@ header.sf-cover{position:relative;overflow:hidden;background:#0a0a33;border-bott
 /* ================= i18n ================= */
 const I18N={
 de:{
- kicker:"Companion · Kapitel 22 · Fernwartung & Fernzugriff",
+ kicker:"Companion · Kapitel 22 · SCADA-Zugriffsmanagement",
  title:"OT-Fernzugriffs-Kriterienkompass",
  sub:"Anbieterneutrales Anforderungsprofil für sichere Fernzugriffslösungen in OT-Umgebungen. Aus wenigen Kontextangaben entsteht ein gewichteter Kriterienkatalog (<span class='sig'>Muss / Soll / Optional</span>) mit Verweisen auf IEC 62443-3-3, ISO/IEC 27001:2022, NIST CSF 2.0 und NIS2 — als Grundlage für Ausschreibung, Anbietergespräch und Audit-Argumentation.",
- ref:"Begleitwerkzeug zum Fachbuch \u201EISMS für die Industrie. Von ISO 27001 über NIS2 bis OT-Security\u201C",
+ ref:"Begleitwerkzeug zum Fachbuch \u201EISMS für die Industrie – Der Praxisratgeber\u201C, Kap. 22 (SCADA-Zugriffsmanagement) und 22.2 (Vier-Stufen-Modell)",
  scopeWarn:"<b>Bewusst ohne Produktnamen.</b> Dieses Werkzeug bewertet keine Anbieter. Es erzeugt das Anforderungsprofil, gegen das Sie Kandidaten selbst prüfen — im Kandidatenvergleich unten, mit Ihren eigenen Einträgen.",
  "h.ctx":"1 · Kontextprofil",
  "n.ctx":"Sieben Fragen zur Einsatzumgebung. Jede Antwort verschiebt die Gewichtung einzelner Kriterien; die Begründung erscheint im Profil.",
@@ -232,17 +232,17 @@ de:{
  deNote:"Hinweis (DE): Bei Session-Recording mit Erfassung interner Mitarbeiter Mitbestimmung nach \u00A787 Abs. 1 Nr. 6 BetrVG prüfen — Reihenfolge und Muster im JIT-Fernwartungs-Fahrplan."
 },
 en:{
- kicker:"Companion · Chapter 22 · Remote maintenance & access",
+ kicker:"Companion · Chapter 11 · Secure remote access & SCADA",
  title:"OT Remote Access Criteria Compass",
  sub:"A vendor-neutral requirements profile for secure remote access in OT environments. A few context inputs produce a weighted criteria catalogue (<span class='sig'>Must / Should / Optional</span>) with references to IEC 62443-3-3, ISO/IEC 27001:2022, NIST CSF 2.0 and NIS2 — a working basis for RFPs, vendor conversations and audit reasoning.",
- ref:"Companion to the book \u201CISMS f\u00FCr die Industrie. Von ISO 27001 \u00FCber NIS2 bis OT-Security\u201D",
+ ref:"Companion to the book \u201CIndustrial ISMS for OT Environments\u201D, ch. 11 (secure remote access & SCADA access management)",
  scopeWarn:"<b>Deliberately vendor-free.</b> This tool does not rate vendors. It produces the requirements profile against which you assess candidates yourself — in the comparison section below, with your own entries.",
  "h.ctx":"1 · Context profile",
  "n.ctx":"Seven questions about the deployment environment. Each answer shifts the weighting of individual criteria; the rationale appears in the profile.",
  "lbl.org":"Organisation / site","lbl.date":"Date",
  "h.arch":"2 · Reference architecture",
  "n.arch":"The chain the criteria jointly describe: the external technician never reaches the target directly — identity and approval at the broker, protocol break in the OT DMZ, and behind it only the requested scope.",
- "n.archLink":"Your own maturity along the four-stage model (ch. 22.2) is assessed by the <a href='https://sabinefroemling-tech.github.io/jit-fernwartung-fahrplan/'>JIT Remote Maintenance Roadmap</a> — this tool answers the follow-up question of what properties the solution must bring.",
+ "n.archLink":"Your own maturity along the four-stage model (ch. 11.2) is assessed by the <a href='https://sabinefroemling-tech.github.io/jit-fernwartung-fahrplan/?lang=en'>JIT Remote Maintenance Roadmap</a> — this tool answers the follow-up question of what properties the solution must bring.",
  "h.profile":"3 · Requirements profile",
  "n.profile":"The derived criteria catalogue. Must criteria are non-negotiable: a candidate that fails a Must criterion is out, regardless of its other strengths.",
  "lbl.cols":"Standard columns:",
@@ -259,9 +259,9 @@ en:{
  baseWhy:"Baseline weighting for OT remote access",
  sfGlance:"<div class='sf-glh'>At a glance</div><dl class='sf-glg'><div><dt>Purpose</dt><dd>Translates your OT context into a vendor-neutral requirements profile for secure remote-access solutions.</dd></div><div><dt>How to use</dt><dd>Answer the context questions; the compass weights the criteria catalogue (must / should / optional) and attaches the references to IEC 62443-3-3, ISO/IEC 27001:2022, NIST CSF 2.0 and NIS2 per criterion.</dd></div><div><dt>Result</dt><dd>A robust, weighted criteria catalogue for tendering, vendor conversations and audit argumentation — saveable, exportable as CSV and printable.</dd></div></dl>",
  sfLegal:"<b>Usage notes (disclaimer).</b> This tool is a methodical working aid for self-assessment and documentation. It replaces neither individual security or legal advice, nor a risk analysis, nor on-site technical verification. References to standards are for orientation and are not a statement of conformity. Results are based solely on your own input; all information is provided without warranty. Use is at your own responsibility; liability for accuracy, completeness, currency and fitness for a particular purpose is — to the extent legally permissible — excluded.",
- sfColo:"© Sabine Frömling · <a href='https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en' rel='license'>CC BY-NC-ND 4.0</a> · Companion series: <a href='https://sabinefroemling-tech.github.io/crown-jewels-companion/'>Crown Jewels</a> · <a href='https://sabinefroemling-tech.github.io/no-touch-register/'>No-Touch Register</a> · <a href='https://sabinefroemling-tech.github.io/jit-fernwartung-fahrplan/'>JIT Remote-Maintenance Roadmap</a> · <a href='https://sabinefroemling-tech.github.io/ot-tabletop-generator/'>Tabletop Generator</a> · <a href='https://sabinefroemling-tech.github.io/island-mode-72h-stresstest/'>Island-Mode 72h Stress Test</a>",
- sfPrintline:"OT remote-access criteria compass · generated with the companion to the book “ISMS für die Industrie”",
- foot:"<b>Limits.</b> The compass structures requirements definition and vendor conversations; it replaces neither a risk analysis nor a proof of concept nor legal review. Standard references are orientation — not legal advice and not a statement of conformity. All data stays in your browser; nothing is transmitted and nothing is silently stored.",
+ sfColo:"© Sabine Frömling · <a href='https://creativecommons.org/licenses/by-nc-nd/4.0/deed.en' rel='license'>CC BY-NC-ND 4.0</a> · Companion series: <a href='https://sabinefroemling-tech.github.io/crown-jewels-companion/?lang=en'>Crown Jewels</a> · <a href='https://sabinefroemling-tech.github.io/no-touch-register/?lang=en'>No-Touch Register</a> · <a href='https://sabinefroemling-tech.github.io/jit-fernwartung-fahrplan/?lang=en'>JIT Remote-Maintenance Roadmap</a> · <a href='https://sabinefroemling-tech.github.io/ot-tabletop-generator/?lang=en'>Tabletop Generator</a> · <a href='https://sabinefroemling-tech.github.io/island-mode-72h-stresstest/?lang=en'>Island-Mode 72h Stress Test</a>",
+ sfPrintline:"OT remote-access criteria compass · generated with the companion to the book “Industrial ISMS for OT Environments”",
+ foot:"<b>Limits.</b> The compass structures requirements definition and vendor conversations; it replaces neither a risk analysis nor a proof of concept nor legal review. Standard references are orientation — not legal advice and not a statement of conformity. All data stays in your browser; nothing is transmitted and nothing is silently stored.<br>German edition: „ISMS für die Industrie – Der Praxisratgeber“ (Springer Vieweg, 2026).",
  deNote:"Note (Germany): if session recording captures internal employees, check co-determination under \u00A787(1) no. 6 BetrVG — sequence and template in the JIT Remote Maintenance Roadmap."
 }};
 
@@ -618,6 +618,7 @@ function syncFields(){
 }
 
 /* ================= Init ================= */
+try{if(new URLSearchParams(location.search).get('lang')==='en')lang='en';}catch(e){}
 syncFields();applyI18n();renderArch();renderQuestions();renderProfile();renderCands();
 </script>
 </body>
